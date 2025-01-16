@@ -86,9 +86,8 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
        }
 
        // Function to scrape video links
-       function scrapeLinks() {
-           const videoElements = ```javascript
-           document.querySelectorAll('a[href*="/video/"]');
+       function scrapeLinks() ```javascript
+           const videoElements = document.querySelectorAll('a[href*="/video/"]');
            videoElements.forEach(video => {
                const link = video.href;
                if (link) {
@@ -128,13 +127,16 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
    // Run the function
    scrapeTikTokLinksAndDownload();
 
-### 4. **Download the Links:** After running the script, a text file named tiktok_video_links.txt will be downloaded to your computer containing all the scraped video links.
 
-**Notes**
+
+
+
+### 4. **Download the Links**: 
+- After running the script, a text file named tiktok_video_links.txt will be downloaded to your computer containing all the scraped video links.
+
+### **Notes**
 - Ensure that you have permission to scrape content from TikTok and comply with their terms of service.
 - The script may take some time to run depending on the number of videos on the page and your internet speed.
 
-**License**
-
+### **License**
 This project is licensed under the MIT License - see the LICENSE file for details.
-   
