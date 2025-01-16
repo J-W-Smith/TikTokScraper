@@ -12,6 +12,48 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 
 - A modern web browser (Chrome, Firefox, etc.)
 - [YT-DLP](https://github.com/yt-dlp/yt-dlp) installed on your system.
+- [FFmpeg](https://ffmpeg.org/download.html) installed on your system (optional, but recommended for video processing).
+
+## Installation
+
+### 1. Download YT-DLP
+
+- Go to the [YT-DLP Releases page](https://github.com/yt-dlp/yt-dlp/releases).
+- Download the appropriate executable for your operating system:
+  - **Windows**: Download `yt-dlp.exe`.
+  - **macOS**: Download `yt-dlp` (you may need to make it executable).
+  - **Linux**: Download `yt-dlp` (you may need to make it executable).
+
+### 2. Download FFmpeg
+
+- Go to the [FFmpeg Download page](https://ffmpeg.org/download.html).
+- Follow the instructions for your operating system to download and install FFmpeg.
+  - **Windows**: You can download a build from [FFmpeg Builds](https://www.gyan.dev/ffmpeg/builds/). Extract the files and add the `bin` folder to your system's PATH.
+  - **macOS**: You can install FFmpeg using Homebrew with the command:
+    ```bash
+    brew install ffmpeg
+    ```
+  - **Linux**: You can install FFmpeg using your package manager. For example, on Ubuntu:
+    ```bash
+    sudo apt update
+    sudo apt install ffmpeg
+    ```
+
+### 3. Set Up Your Environment
+
+- **Windows**:
+  1. Create a folder for your tools, e.g., `C:\yt-dlp`.
+  2. Place the `yt-dlp.exe` file and the `ffmpeg` folder (containing the `bin` folder) in this directory.
+  3. Add the `bin` folder of FFmpeg to your system's PATH:
+     - Right-click on "This PC" or "My Computer" and select "Properties."
+     - Click on "Advanced system settings."
+     - Click on "Environment Variables."
+     - Under "System variables," find the `Path` variable and click "Edit."
+     - Add the path to the `bin` folder of FFmpeg (e.g., `C:\path\to\ffmpeg\bin`).
+
+- **macOS/Linux**:
+  1. Place the `yt-dlp` file in a directory that is in your PATH, or you can create a new directory (e.g., `~/yt-dlp`) and add it to your PATH.
+  2. Ensure FFmpeg is installed and accessible from the terminal.
 
 ## Usage
 
@@ -58,3 +100,26 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 
    // Run the function
    scrapeTikTokLinksAndDownload();
+   ```
+
+
+4. **Download the Links:** After running the code, a text file named tiktok_video_links.txt will be downloaded to your computer containing the scraped video links.
+
+5. **Download Videos Using YT-DLP:**
+
+--Open your terminal or command prompt.
+
+--Navigate to the directory where the tiktok_video_links.txt file is located.
+
+--Run the following command:
+
+```bash
+yt-dlp -a "Full path\tiktok_video_links.txt"
+```
+This command will read the video links from the text file and download the videos using YT-DLP.
+
+License
+This project is licensed under the MIT License. See the LICENSE file for details.
+
+Disclaimer
+This tool is intended for personal use and educational purposes only. Please respect the copyright and terms of service of TikTok and any other platforms you use this tool with.
