@@ -66,40 +66,59 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 3. **Run the Scraper**: Copy and paste the following JavaScript code into the console and press `Enter`:
 
    ```javascript
-   // Function to scrape TikTok video links and download them as a text file
-   function scrapeTikTokLinksAndDownload() {
-       const videoLinks = [];
-       
-       // Select all video elements on the page
-       const videoElements = document.querySelectorAll('a[href*="/video/"]');
+ // Function to scrape TikTok video links and download them as a text file
+async function scrapeTikTokLinksAndDownload() {
+    const videoLinks = new Set(); // Use a Set to avoid duplicates
 
-       // Loop through each video element and extract the href attribute
-       videoElements.forEach(video => {
-           const link = video.href;
-           if (link && !videoLinks.includes(link)) {
-               videoLinks.push(link);
-           }
-       });
+    // Function to scroll down the page
+    function scrollDown() {
+        return new Promise((resolve) => {
+            window.scrollBy(0, window.innerHeight); // Scroll down by one viewport height
+            setTimeout(resolve, 2000); // Wait for 2 seconds for new content to load
+        });
+    }
 
-       // Create a text file from the links
-       const linksString = videoLinks.join('\n');
-       const blob = new Blob([linksString], { type: 'text/plain' });
-       const url = URL.createObjectURL(blob);
+    // Function to scrape video links
+    function scrapeLinks() {
+        const videoElements = document.querySelectorAll('a[href*="/video/"]');
+        videoElements.forEach(video => {
+            const link = video.href;
+            if (link) {
+                videoLinks.add(link); // Add link to the Set
+            }
+        });
+    }
 
-       // Create a temporary anchor element to trigger the download
-       const a = document.createElement('a');
-       a.href = url;
-       a.download = 'tiktok_video_links.txt'; // Name of the file to be downloaded
-       document.body.appendChild(a);
-       a.click(); // Trigger the download
-       document.body.removeChild(a); // Clean up
+    let previousCount = 0; // To track the number of links before scrolling
+    let currentCount = 0; // To track the number of links after scrolling
 
-       // Revoke the object URL to free up memory
-       URL.revokeObjectURL(url);
-   }
+    // Keep scrolling until no new videos are loaded
+    do {
+        previousCount = videoLinks.size; // Store the current count of unique links
+        await scrollDown(); // Scroll down and wait for new content
+        scrapeLinks(); // Scrape the links after scrolling
+        currentCount = videoLinks.size; // Update the current count of unique links
+    } while (currentCount > previousCount); // Continue if new links were found
 
-   // Run the function
-   scrapeTikTokLinksAndDownload();
+    // Create a text file from the links
+    const linksString = Array.from(videoLinks).join('\n');
+    const blob = new Blob([linksString], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+
+    // Create a temporary anchor element to trigger the download
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'tiktok_video_links.txt'; // Name of the file to be downloaded
+    document.body.appendChild(a);
+    a.click(); // Trigger the download
+    document.body.removeChild(a); // Clean up
+
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(url);
+}
+
+// Run the function
+scrapeTikTokLinksAndDownload();
    ```
 
 
