@@ -48,12 +48,19 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
      - Right-click on "This PC" or "My Computer" and select "Properties."
      - Click on "Advanced system settings."
      - Click on "Environment Variables."
-     - Under "System variables," find the `Path` variable and click "Edit."
-     - Add the path to the `bin` folder of FFmpeg (e.g., `C:\path\to\ffmpeg\bin`).
+     - In the "System variables" section, find the "Path" variable and click "Edit."
+     - Click "New" and add the path to the `bin` folder of FFmpeg (e.g., `C:\yt-dlp\ffmpeg\bin`).
+     - Click "OK" to close all dialog boxes.
 
 - **macOS/Linux**:
-  1. Place the `yt-dlp` file in a directory that is in your PATH, or you can create a new directory (e.g., `~/yt-dlp`) and add it to your PATH.
-  2. Ensure FFmpeg is installed and accessible from the terminal.
+  1. Open a terminal.
+  2. Create a directory for your tools, e.g., `~/yt-dlp`.
+  3. Move the `yt-dlp` executable and the FFmpeg binary to this directory.
+  4. Add the directory to your PATH by editing your shell configuration file (e.g., `.bashrc`, `.zshrc`):
+     ```bash
+     export PATH="$PATH:~/yt-dlp"
+     ```
+  5. Save the file and run `source ~/.bashrc` or `source ~/.zshrc` to apply the changes.
 
 ## Usage
 
@@ -66,76 +73,68 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 3. **Run the Scraper**: Copy and paste the following JavaScript code into the console and press `Enter`:
 
    ```javascript
- // Function to scrape TikTok video links and download them as a text file
-async function scrapeTikTokLinksAndDownload() {
-    const videoLinks = new Set(); // Use a Set to avoid duplicates
+   // Function to scrape TikTok video links and download them as a text file
+   async function scrapeTikTokLinksAndDownload() {
+       const videoLinks = new Set(); // Use a Set to avoid duplicates
 
-    // Function to scroll down the page
-    function scrollDown() {
-        return new Promise((resolve) => {
-            window.scrollBy(0, window.innerHeight); // Scroll down by one viewport height
-            setTimeout(resolve, 2000); // Wait for 2 seconds for new content to load
-        });
-    }
+       // Function to scroll down the page
+       function scrollDown() {
+           return new Promise((resolve) => {
+               window.scrollBy(0, window.innerHeight); // Scroll down by one viewport height
+               setTimeout(resolve, 2000); // Wait for 2 seconds for new content to load
+           });
+       }
 
-    // Function to scrape video links
-    function scrapeLinks() {
-        const videoElements = document.querySelectorAll('a[href*="/video/"]');
-        videoElements.forEach(video => {
-            const link = video.href;
-            if (link) {
-                videoLinks.add(link); // Add link to the Set
-            }
-        });
-    }
+       // Function to scrape video links
+       function scrapeLinks() {
+           const videoElements = ```javascript
+           document.querySelectorAll('a[href*="/video/"]');
+           videoElements.forEach(video => {
+               const link = video.href;
+               if (link) {
+                   videoLinks.add(link); // Add link to the Set
+               }
+           });
+       }
 
-    let previousCount = 0; // To track the number of links before scrolling
-    let currentCount = 0; // To track the number of links after scrolling
+       let previousCount = 0; // To track the number of links before scrolling
+       let currentCount = 0; // To track the number of links after scrolling
 
-    // Keep scrolling until no new videos are loaded
-    do {
-        previousCount = videoLinks.size; // Store the current count of unique links
-        await scrollDown(); // Scroll down and wait for new content
-        scrapeLinks(); // Scrape the links after scrolling
-        currentCount = videoLinks.size; // Update the current count of unique links
-    } while (currentCount > previousCount); // Continue if new links were found
+       // Keep scrolling until no new videos are loaded
+       do {
+           previousCount = videoLinks.size; // Store the current count of unique links
+           await scrollDown(); // Scroll down and wait for new content
+           scrapeLinks(); // Scrape the links after scrolling
+           currentCount = videoLinks.size; // Update the current count of unique links
+       } while (currentCount > previousCount); // Continue if new links were found
 
-    // Create a text file from the links
-    const linksString = Array.from(videoLinks).join('\n');
-    const blob = new Blob([linksString], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
+       // Create a text file from the links
+       const linksString = Array.from(videoLinks).join('\n');
+       const blob = new Blob([linksString], { type: 'text/plain' });
+       const url = URL.createObjectURL(blob);
 
-    // Create a temporary anchor element to trigger the download
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'tiktok_video_links.txt'; // Name of the file to be downloaded
-    document.body.appendChild(a);
-    a.click(); // Trigger the download
-    document.body.removeChild(a); // Clean up
+       // Create a temporary anchor element to trigger the download
+       const a = document.createElement('a');
+       a.href = url;
+       a.download = 'tiktok_video_links.txt'; // Name of the file to be downloaded
+       document.body.appendChild(a);
+       a.click(); // Trigger the download
+       document.body.removeChild(a); // Clean up
 
-    // Revoke the object URL to free up memory
-    URL.revokeObjectURL(url);
-}
+       // Revoke the object URL to free up memory
+       URL.revokeObjectURL(url);
+   }
 
-// Run the function
-scrapeTikTokLinksAndDownload();
-   ```
+   // Run the function
+   scrapeTikTokLinksAndDownload();
 
+### 4. **Download the Links:** After running the script, a text file named tiktok_video_links.txt will be downloaded to your computer containing all the scraped video links.
 
-4. **Download the Links:** After running the code, a text file named tiktok_video_links.txt will be downloaded to your computer containing the scraped video links.
+**Notes**
+- Ensure that you have permission to scrape content from TikTok and comply with their terms of service.
+- The script may take some time to run depending on the number of videos on the page and your internet speed.
 
-5. **Download Videos Using YT-DLP:**
-    - Open your terminal or command prompt.
-    - Navigate to the directory where the tiktok_video_links.txt file is located.
-    - Run the following command:
+**License**
 
-```bash
-yt-dlp -a "Full path\tiktok_video_links.txt"
-```
-This command will read the video links from the text file and download the videos using YT-DLP.
-
-License
-This project is licensed under the MIT License. See the LICENSE file for details.
-
-Disclaimer
-This tool is intended for personal use and educational purposes only. Please respect the copyright and terms of service of TikTok and any other platforms you use this tool with.
+This project is licensed under the MIT License - see the LICENSE file for details.
+   
