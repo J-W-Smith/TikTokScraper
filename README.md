@@ -106,10 +106,9 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 4. **Download the Links:** After running the code, a text file named tiktok_video_links.txt will be downloaded to your computer containing the scraped video links.
 
 5. **Download Videos Using YT-DLP:**
-
-  - Open your terminal or command prompt.
-  - Navigate to the directory where the tiktok_video_links.txt file is located.
-  - Run the following command:
+    - Open your terminal or command prompt.
+    - Navigate to the directory where the tiktok_video_links.txt file is located.
+    - Run the following command:
 
 ```bash
 yt-dlp -a "Full path\tiktok_video_links.txt"
