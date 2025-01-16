@@ -87,8 +87,7 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
 
        // Function to scrape video links
        function scrapeLinks() {
-           const videoElements = document.querySelectorAll ```javascript
-   ('a[href*="/video/"]');
+           const videoElements = document.querySelectorAll('a[href*="/video/"]');
            videoElements.forEach(video => {
                const link = video.href;
                if (link) {
@@ -124,21 +123,72 @@ A simple JavaScript-based scraper for extracting TikTok video links from a user'
        // Revoke the object URL to free up memory
        URL.revokeObjectURL(url);
    }
-
    // Run the function
    scrapeTikTokLinksAndDownload();
+   ```
+
+## 4. ***Download the Links***
+  -  After running the script, a file named `tiktok_video_links.txt` will be downloaded containing the scraped video links.
+
+## Use YT-DLP to Download Videos
+  -  After downloading the text file, follow these steps to download the videos using YT-DLP:
+
+1. **Open Your Command Line Interface**:
+   - **Windows**: Open Command Prompt. Or Powershell
+   - **macOS/Linux**: Open Terminal.
+
+2. **Navigate to the Directory**: Use the `cd` command to navigate to the directory where `yt-dlp.exe` is located. For example:
+   ```bash
+   cd path\to\your\yt-dlp\directory
+   ```
+
+3. ***Run YT-DLP with the Downloaded Links:
+
+  ***Use the following command to download the videos using the links from the text file. Replace "path/to/tiktok_video_links.txt" with the actual path to the downloaded text file:***
+   -  ***Windows***:
+
+```cmd
+yt-dlp.exe -o "%(uploader)s - %(title).50s - %(id)s.%(ext)s" -a "path\to\tiktok_video_links.txt"
+```
+  -  ***macOS/Linux***:
+
+```bash
+./yt-dlp -o "%(uploader)s - %(title).50s - %(id)s.%(ext)s" -a "path/to/tiktok_video_links.txt"
+```
+***Explanation of Flags:***
+
+  -  -o: Specifies the output template for naming downloaded videos. In this example:
+  -  %(uploader)s: Inserts the uploader's name.
+  -  %(title).50s: Trims the video title to 50 characters.
+  -  (id)s: Includes the unique video ID.
+  -  %(ext)s: Adds the appropriate file extension based on the video format.
+  -  -a: Reads video URLs from the specified text file.
+
+***Wait for the Downloads to Complete:***
+
+  -  YT-DLP will start downloading all the videos listed in the text file. Depending on your internet speed and the number of videos, this process may take some time.
+Verify the Downloads:
+
+  -  Once the process is complete, check the directory where you ran the command. The videos should be downloaded there, named according to the specified output template.
+***(Optional) Customize or Convert Videos***:
+
+***If you want to convert the downloaded videos to another format or adjust their settings, you can use FFmpeg. For example, to convert a video to MP4 format***:
+```bash
+ffmpeg -i "input_video.ext" -c:v libx264 -c:a aac "output_video.mp4"
+```
 
 
-### 4. ***Download the Links:***
-  -  After running the script, a text file named tiktok_video_links.txt will be downloaded containing all the scraped video links.
+## License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 
-### ***Troubleshooting***
-  -  If the script does not work as expected, ensure that the TikTok page is fully loaded before running the script.
-  -  Check the browser console for any error messages that may indicate what went wrong.
-  -  Adjust the scroll timing in the script if the page is slow to load new content.
+---
 
-### ***License***
-This project is licensed under the MIT License. See the LICENSE file for details.
+## Acknowledgments
+- **[YT-DLP](https://github.com/yt-dlp/yt-dlp)** for making video downloading easy and efficient.  
+- **[FFmpeg](https://ffmpeg.org)** for providing powerful video processing tools.  
+- Thanks to the developers and contributors of open-source software that make tools like this possible.
 
-### ***Acknowledgments***
-Thanks to the developers of YT-DLP and FFmpeg for their amazing tools that make video downloading easy and efficient.
+---
+
+## Disclaimer
+This tool is intended for **personal use only**. Ensure compliance with TikTok's Terms of Service, copyright laws, and other applicable regulations when using this scraper. Unauthorized downloading or redistribution of copyrighted content may result in legal consequences. Use this tool responsibly.
